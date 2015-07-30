@@ -170,7 +170,7 @@ module Watir
       elements.__send__(method) { |el| matches_selector?(el, rx_selector) }
     end
 
-    VALID_WHATS = [String, Regexp]
+    VALID_WHATS = [String, Regexp, TrueClass, FalseClass]
 
     def check_type(how, what)
       case how
@@ -315,7 +315,7 @@ module Watir
       xpath = ".//"
       xpath << (selectors.delete(:tag_name) || '*').to_s
 
-      idx = selectors.delete :index
+      selectors.delete :index
 
       # the remaining entries should be attributes
       unless selectors.empty?
@@ -352,7 +352,13 @@ module Watir
 
         selectors.each do |key, value|
           key = key.to_s.gsub("_", "-")
-          css << %([#{key}="#{css_escape value}"]) # TODO: proper escaping
+          if value == true
+            css << css_attribute_presence(key)
+          elsif value == false
+            css << css_attribute_absence(key)
+          else
+            css << %([#{key}="#{css_escape value}"]) # TODO: proper escaping
+          end
         end
       end
 
@@ -381,6 +387,10 @@ module Watir
       selectors.map do |key, val|
         if val.kind_of?(Array)
           "(" + val.map { |v| equal_pair(key, v) }.join(" or ") + ")"
+        elsif val == true
+          xpath_attribute_presence(key)
+        elsif val == false
+          xpath_attribute_absence(key)
         else
           equal_pair(key, val)
         end
@@ -464,6 +474,22 @@ module Watir
       end
 
       false
+    end
+
+    def xpath_attribute_presence(attribute)
+      lhs_for(attribute)
+    end
+
+    def xpath_attribute_absence(attribute)
+      "not(#{lhs_for(attribute)})"
+    end
+
+    def css_attribute_presence(attribute)
+      "[#{attribute}]"
+    end
+
+    def css_attribute_absence(attribute)
+      ":not([#{attribute}])"
     end
 
   end # ElementLocator

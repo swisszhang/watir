@@ -67,6 +67,26 @@ describe Watir::ElementLocator do
         locate_one [:dir,   "foo",
                     :title, "bar"]
       end
+
+      it "handles selector with attribute presence" do
+        if Watir.prefer_css?
+          expect_one :css, '[data-view]'
+        else
+          expect_one :xpath, ".//*[@data-view]"
+        end
+
+        locate_one [:data_view, true]
+      end
+
+      it "handles selector with attribute absence" do
+        if Watir.prefer_css?
+          expect_one :css, ':not([data-view])'
+        else
+          expect_one :xpath, ".//*[not(@data-view)]"
+        end
+
+        locate_one [:data_view, false]
+      end
     end
 
 
@@ -356,9 +376,9 @@ describe Watir::ElementLocator do
         raise_error(TypeError, %[expected Fixnum, got "bar":String])
       end
 
-      it "raises a TypeError if selector value is not a String or Regexp" do
+      it "raises a TypeError if selector value is not a String, Regexp or boolean" do
         expect { locate_one(tag_name: 123) }.to \
-        raise_error(TypeError, %[expected one of [String, Regexp], got 123:Fixnum])
+        raise_error(TypeError, %[expected one of [String, Regexp, TrueClass, FalseClass], got 123:Fixnum])
       end
 
       it "raises a MissingWayOfFindingObjectException if the attribute is not valid" do
