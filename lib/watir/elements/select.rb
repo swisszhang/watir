@@ -21,7 +21,7 @@ module Watir
     #
 
     def options
-      assert_exists
+      wait_for_exists
       super
     end
 
