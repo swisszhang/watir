@@ -13,6 +13,10 @@ include Watir
 
 SELENIUM_SELECTORS = %i(class class_name css id tag_name xpath)
 
+if ENV['RELAXED_LOCATE'] == "false"
+  Watir.relaxed_locate = false
+end
+
 if ENV['TRAVIS']
   ENV['DISPLAY'] = ":99.0"
 

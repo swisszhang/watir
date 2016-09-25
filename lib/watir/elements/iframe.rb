@@ -50,6 +50,7 @@ module Watir
     #
 
     def html
+      Watir.relaxed_locate? ? wait_for_exists : assert_exists
       wd.page_source
     end
 

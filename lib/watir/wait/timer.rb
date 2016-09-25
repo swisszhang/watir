@@ -13,7 +13,10 @@ module Watir
 
       def wait(timeout, &block)
         end_time = @end_time || ::Time.now + timeout
-        yield(block) until ::Time.now > end_time
+        loop do
+          yield(block)
+          break if ::Time.now > end_time
+        end
       end
 
     end # Timer
