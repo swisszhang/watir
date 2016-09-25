@@ -21,7 +21,7 @@ module Watir
     #
 
     def options
-      wait_for_exists
+      Watir.relaxed_locate? ? wait_for_exists : assert_exists
       super
     end
 
@@ -212,7 +212,6 @@ module Watir
       element.text
     rescue Selenium::WebDriver::Error::StaleElementReferenceError, Selenium::WebDriver::Error::UnhandledAlertError
       # guard for scenario where selecting the element changes the page, making our element obsolete
-
       ''
     end
 
