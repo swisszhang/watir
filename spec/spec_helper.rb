@@ -10,6 +10,7 @@ require 'rubygems'
 require 'rspec'
 
 include Watir
+Watir.default_timeout = 5
 
 SELENIUM_SELECTORS = %i(class class_name css id tag_name xpath)
 
