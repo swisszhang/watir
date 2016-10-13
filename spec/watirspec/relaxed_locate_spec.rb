@@ -126,7 +126,7 @@ module Watir
           begin
             Watir.default_timeout = 1
             element = browser.link(id: 'not_there')
-            message = "This test has slept for the duration of the default timeout. If your test is passing, consider using Element#exists? instead of rescuing this error\n"
+            message = "This code has slept for the duration of the default timeout waiting for an Element to exist. If the test is still passing, consider using Element#exists? instead of rescuing this error\n"
             expect do
               begin
                 element.click
@@ -149,7 +149,7 @@ module Watir
 
         it 'ensures that the same timeout is used for all of the calls' do
           begin
-            Watir.default_timeout = 1
+            Watir.default_timeout = 2
             start_time = ::Time.now
             browser.a(id: 'show_bar').click
             expect { browser.div(id: 'bar').div(id: 'not_there').click }.to raise_exception
